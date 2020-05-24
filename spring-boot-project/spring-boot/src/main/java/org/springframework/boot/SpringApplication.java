@@ -272,11 +272,11 @@ public class SpringApplication {
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
 		//3、应用环境检测
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
-		//4、配置系统初始化器
+		//4、设置系统初始化器,获取ApplicationContextInitializer，也是在这里开始首次加载spring.factories文件
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
-		//5、配置应用监听器
+		//5、设置应用监听器
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
-		//6、配置main方法所在类
+		//6、设置main方法所在类
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
 
@@ -457,6 +457,7 @@ public class SpringApplication {
 				getSpringFactoriesInstances(SpringApplicationRunListener.class, types, this, args));
 	}
 
+	// 获取工厂实例对象
 	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type) {
 		return getSpringFactoriesInstances(type, new Class<?>[] {});
 	}
@@ -465,14 +466,19 @@ public class SpringApplication {
 	 * 收集配置文件中的配置工厂类、加载组件工厂、注册组件内定义bean、排序
 	 */
 	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
+		// 获取类加载器
 		ClassLoader classLoader = getClassLoader();
 		// Use names and ensure unique to protect against duplicates
+		// 使用名称并确保唯一以防止重复
 		Set<String> names = new LinkedHashSet<>(SpringFactoriesLoader.loadFactoryNames(type, classLoader));
+		// 创建工厂实例对象
 		List<T> instances = createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);
+		// 对工厂实例对象列表进行排序
 		AnnotationAwareOrderComparator.sort(instances);
 		return instances;
 	}
 
+	// 创建工厂实例对象
 	@SuppressWarnings("unchecked")
 	private <T> List<T> createSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes,
 			ClassLoader classLoader, Object[] args, Set<String> names) {

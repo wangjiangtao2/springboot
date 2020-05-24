@@ -16,9 +16,6 @@
 
 package org.springframework.boot.context.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.context.ApplicationContextInitializer;
@@ -30,6 +27,9 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link ApplicationContextInitializer} that delegates to other initializers that are
@@ -50,18 +50,24 @@ public class DelegatingApplicationContextInitializer
 
 	@Override
 	public void initialize(ConfigurableApplicationContext context) {
+		// 获取上下文环境变量
 		ConfigurableEnvironment environment = context.getEnvironment();
+		// 从上下文环境变量中获取指定初始化类列表
 		List<Class<?>> initializerClasses = getInitializerClasses(environment);
 		if (!initializerClasses.isEmpty()) {
+			// 应用初始化器
 			applyInitializerClasses(context, initializerClasses);
 		}
 	}
 
 	private List<Class<?>> getInitializerClasses(ConfigurableEnvironment env) {
+		// 从上下文环境变量获取指定的属性名
 		String classNames = env.getProperty(PROPERTY_NAME);
 		List<Class<?>> classes = new ArrayList<>();
 		if (StringUtils.hasLength(classNames)) {
+			//   将逗号分割的属性值逐个取出
 			for (String className : StringUtils.tokenizeToStringArray(classNames, ",")) {
+				// 实例化对象并添加到列表中
 				classes.add(getInitializerClass(className));
 			}
 		}
