@@ -682,6 +682,10 @@ public class SpringApplication {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	protected void applyInitializers(ConfigurableApplicationContext context) {
 		for (ApplicationContextInitializer initializer : getInitializers()) {
+			/**
+			 * 先判断此初始化器的泛型参数是否是ConfigurableApplicationContext及其子类;
+			 * 如果该泛型参数不是ConfigurableApplicationContext及其子类，就不会调用该初始化器。
+			 */
 			Class<?> requiredType = GenericTypeResolver.resolveTypeArgument(initializer.getClass(),
 					ApplicationContextInitializer.class);
 			Assert.isInstanceOf(requiredType, context, "Unable to call initializer.");
