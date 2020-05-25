@@ -76,6 +76,7 @@ public class DelegatingApplicationContextInitializer
 
 	private Class<?> getInitializerClass(String className) throws LinkageError {
 		try {
+			//加载类
 			Class<?> initializerClass = ClassUtils.forName(className, ClassUtils.getDefaultClassLoader());
 			Assert.isAssignable(ApplicationContextInitializer.class, initializerClass);
 			return initializerClass;
