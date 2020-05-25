@@ -109,7 +109,9 @@ public class DelegatingApplicationContextInitializer
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void applyInitializers(ConfigurableApplicationContext context,
 			List<ApplicationContextInitializer<?>> initializers) {
+		//排序
 		initializers.sort(new AnnotationAwareOrderComparator());
+		//遍历调用初始化器
 		for (ApplicationContextInitializer initializer : initializers) {
 			initializer.initialize(context);
 		}
