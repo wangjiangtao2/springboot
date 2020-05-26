@@ -325,8 +325,9 @@ public class SpringApplication {
 		Collection<SpringBootExceptionReporter> exceptionReporters = new ArrayList<>();
 		//3、设置系统属性 `java.awt.headless` 的值，默认值为：true. headless模式代表当前环境没有显示器没有键盘的环境。
 		configureHeadlessProperty();
-		//4、创建所有 Spring 运行监听器并发布应用启动事件
+		//4、从spring.factories文件中获取并创建SpringApplicationRunListener类型的 监听器
 		SpringApplicationRunListeners listeners = getRunListeners(args);
+		//发布启动事件
 		listeners.starting();
 		try {
 			//5、初始化默认应用参数类
